@@ -18,6 +18,8 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
 
+realkey = os.environ.get('key', None)
+
 #def create_app(test_config=None):
     # create and configure the app
 
@@ -56,7 +58,7 @@ def index():
 
 @app.route('/search')
 def parse():
-    key="AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU"
+    key=realkey
     keywords = {
         "radius":"1000"
     }
@@ -64,7 +66,7 @@ def parse():
     for keyword in [item for item in keywords if item not in queryDict]:
         queryDict[keyword]=keywords[keyword]
     queryString = "&".join([key+"="+value for (key,value) in queryDict.items()])
-    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDcQr1HHBaG-SzBkfue0sJDyOKcCQFqI4I'
+    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=' + realkey
     url = url + str(queryString)
 
     contents = json.load(urllib.request.urlopen(url.replace(" ", "%20")))
@@ -113,8 +115,8 @@ def parse():
 #/update?location=_x,_y
 @app.route('/update')
 def update():
-    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&key=AIzaSyDcQr1HHBaG-SzBkfue0sJDyOKcCQFqI4Iradius=20&'
-    url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=cafe&key=AIzaSyDcQr1HHBaG-SzBkfue0sJDyOKcCQFqI4Iradius=20&'
+    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&key=' + realkey + '&radius=20&'
+    url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=cafe&key=' + realkey + '&radius=20&'
     location = "location="+request.args.get("location")
     contents = json.load(urllib.request.urlopen(url+location))
     contents1 = json.load(urllib.request.urlopen(url1+location))
@@ -165,7 +167,7 @@ def query(lat,lon):
     radius = 200
     minprice = 0
     maxprice = 4
-    key = "key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU"
+    key = "key=" + realkey
     location= "location=" + str(lat) +","+ str(lon)
     radius = "radius=" + str(radius)
     minprice = "minprice=" + str(minprice)
