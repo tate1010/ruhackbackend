@@ -66,7 +66,7 @@ def parse():
     for keyword in [item for item in keywords if item not in queryDict]:
         queryDict[keyword]=keywords[keyword]
     queryString = "&".join([key+"="+value for (key,value) in queryDict.items()])
-    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=' + realkey
+    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=' + realkey + "&"
     url = url + str(queryString)
 
     contents = json.load(urllib.request.urlopen(url.replace(" ", "%20")))
@@ -108,7 +108,7 @@ def parse():
            pass
 
 
-    return jsonify(globalid)
+    return jsonify(contents)
 
 
 
