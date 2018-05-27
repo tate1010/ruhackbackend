@@ -1,0 +1,10 @@
+Flask
+gunicorn
+numpy
+pandas
+os
+scipy
+pprint
+matplotlib
+datetime
+
