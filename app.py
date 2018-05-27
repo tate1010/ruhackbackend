@@ -91,7 +91,7 @@ def update():
 
         if food_rest != 0.0:
             result[food_type] = food_rest
-    return jsonify(result,restaurants)
+    return jsonify(result)
 
 
 
