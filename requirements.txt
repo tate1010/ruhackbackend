@@ -7,3 +7,4 @@ python_dateutil==2.7.3
 Flask-Cors==3.0.4
 fuzzywuzzy==0.16.0
 python-Levenshtein==0.12.0
+xlrd==1.1.0
