@@ -3,6 +3,7 @@ import numpy as np
 import scipy as sp
 import scipy.stats
 from flask import Flask
+from flask import request
 import os
 from pprint import pprint
 import datetime
@@ -38,21 +39,18 @@ app = Flask(__name__, instance_relative_config=True)
 #    pass
 
 
-@app.route('/<userID>/<query>')
-def parse(userID, query):
+@app.route('/')
+def parse():
     key="AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU"
     keywords = {
         "radius":"1000"
     }
     url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&'
-    queryDict = {x.split("=")[0]:x.split("=")[1] for x in query.split("&")}
+    queryDict = {x:request.args.get(x) for x in request.args}
     for keyword in [item for item in keywords if item not in queryDict]:
         queryDict[keyword]=keywords[keyword]
     queryString = "&".join([key+"="+value for (key,value) in queryDict.items()])
     url = url + str(queryString)
-
-
-    #contents = urllib.request.urlopen(url).read()
 
     contents = json.load(urllib.request.urlopen(url.replace(" ", "%20")))
 
