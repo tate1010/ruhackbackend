@@ -14,6 +14,9 @@ from flask import jsonify
 import urllib.request
 import urllib
 import json
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+
 
 #def create_app(test_config=None):
     # create and configure the app
@@ -40,6 +43,12 @@ CORS(app)
 #except OSError:#
 #    pass
 
+df = pd.read_excel('spending.xlsx',skiprows= 1)
+budget = 100
+grouped = df.groupby("Label")
+food = grouped.get_group("food")
+# luxrary = grouped.get_group("luxury")
+# luxury_food = grouped.get_group("luxury-food")
 
 @app.route('/')
 def parse():
@@ -47,11 +56,11 @@ def parse():
     keywords = {
         "radius":"1000"
     }
-    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&'
     queryDict = {x:request.args.get(x) for x in request.args}
     for keyword in [item for item in keywords if item not in queryDict]:
         queryDict[keyword]=keywords[keyword]
     queryString = "&".join([key+"="+value for (key,value) in queryDict.items()])
+    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&'
     url = url + str(queryString)
 
     contents = json.load(urllib.request.urlopen(url.replace(" ", "%20")))
@@ -59,20 +68,44 @@ def parse():
     return jsonify(contents)
 
 
+#/update?location=_x,_y
+@app.route('/update')
+def update():
+    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&radius=20&'
+    url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=cafe&key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&radius=20&'
+    location = "location="+request.args.get("location")
+    contents = json.load(urllib.request.urlopen(url+location))
+    contents1 = json.load(urllib.request.urlopen(url1+location))
+    contents = contents["results"]
+    contents1 = contents1["results"]
+
+    restaurants = [item["name"] for item in (contents+contents1)]
+    #
+    result = {}
+    for item in restaurants:
+        food_rest = 0.0
+        food_type = item.lower()
+        for meat in food.iterrows():
+            if food_type in meat[1]["DESCRIPTION"].lower() or fuzz.partial_ratio(food_type.lower(), meat[1]["DESCRIPTION"].lower()) >= 75:
+                food_rest = food_rest +  meat[1]["DEBIT"]
+
+        if food_rest != 0.0:
+            result[food_type] = food_rest
+    return jsonify(result,restaurants)
+
+
+
+
 
 @app.route('/hello')
 def hello():
-        df = pd.read_excel('spending.xlsx',skiprows= 1)
-        budget = 100
-
-        grouped = df.groupby("Label")
-
-        food = grouped.get_group("food")
 
 
-        luxrary = grouped.get_group("luxury")
 
-        luxury_food = grouped.get_group("luxury-food")
+
+
+
+
 
         pprint(food)
 
