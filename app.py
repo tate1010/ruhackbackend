@@ -57,12 +57,7 @@ def parse(userID, query):
 
     contents = json.load( urllib.request.urlopen(url.replace(" ", "%20")))
     nextpage = contents["next_page_token"]
-#
-    contents = contents["results"]
-    for item in contents:
-    #    print (item["name"])
-    #    print (str(item["geometry"]["location"]["lat"]) + "." + str(item["geometry"]["location"]["lng"]))
-         pass
+
     return contents
 
 
