@@ -64,7 +64,7 @@ def parse():
     for keyword in [item for item in keywords if item not in queryDict]:
         queryDict[keyword]=keywords[keyword]
     queryString = "&".join([key+"="+value for (key,value) in queryDict.items()])
-    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&'
+    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDcQr1HHBaG-SzBkfue0sJDyOKcCQFqI4I'
     url = url + str(queryString)
 
     contents = json.load(urllib.request.urlopen(url.replace(" ", "%20")))
@@ -113,8 +113,8 @@ def parse():
 #/update?location=_x,_y
 @app.route('/update')
 def update():
-    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&radius=20&'
-    url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=cafe&key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU&radius=20&'
+    url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=restaurant&key=AIzaSyDcQr1HHBaG-SzBkfue0sJDyOKcCQFqI4Iradius=20&'
+    url1 = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?type=cafe&key=AIzaSyDcQr1HHBaG-SzBkfue0sJDyOKcCQFqI4Iradius=20&'
     location = "location="+request.args.get("location")
     contents = json.load(urllib.request.urlopen(url+location))
     contents1 = json.load(urllib.request.urlopen(url1+location))
