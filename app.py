@@ -10,6 +10,8 @@ import datetime
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta, MO
 from flask import jsonify
+import urllib.request
+import json
 
 #def create_app(test_config=None):
     # create and configure the app
@@ -77,6 +79,36 @@ def hello():
         budget_remaining = str(budget_remaining)
 
         result = {"budget_remaining" :  budget_remaining}
+
+
+
+        queryresult = urllib.request(query(43.6576585,-79.3809904))
+
         return jsonify(result)
+
+def query(lat,lon):
+    radius = 200
+    minprice = 0
+    maxprice = 4
+    key = "key=AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU"
+    location= "location=" + str(lat) +","+ str(lon)
+    radius = "radius=" + str(radius)
+    minprice = "minprice=" + str(minprice)
+    maxprice = "maxprice=" + str(maxprice)
+    query = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?types=restaurant"
+    query = appendquery(query,[key,location,radius])
+    return query
+def appendquery(q,item):
+    for i in item:
+        q =  q + "&" + i
+    return q
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+    #app.run(debug=True, use_reloader=True)
+    print(query(43.6576585,-79.3809904))
+    queryresult = json.load(urllib.request.urlopen(query(43.6576585,-79.3809904)))
+    nextpage = queryresult["next_page_token"]
+    #print(nextpage)
+    queryresult = queryresult["results"]
+    for item in queryresult:
+        print (item["name"])
+        print (str(item["geometry"]["location"]["lat"]) + "." + str(item["geometry"]["location"]["lng"]))
