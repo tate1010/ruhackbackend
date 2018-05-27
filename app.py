@@ -69,7 +69,45 @@ def parse():
 
     contents = json.load(urllib.request.urlopen(url.replace(" ", "%20")))
 
-    return jsonify(contents)
+    try:
+        next_page_token = contents["next_page_token"]
+    except:
+        pass
+    contents  = contents["results"]
+    l, h , allow = hello()
+    globalid = []
+    #return(jsonify(contents))
+    for item in contents:
+
+
+      try:
+        if item["opening_hours"]["open_now"] == False:
+
+            cur = {}
+            if allow < 15 and item["price_level"] == 1:
+                cur["rating"] = item["rating"]
+                cur["location"] = (item["geometry"]["location"])
+                cur["name"] = item["name"]
+
+            elif allow > 15 and allow < 30 and item["price_level"] == 2:
+                cur["rating"] = item["rating"]
+                cur["location"] = (item["geometry"]["location"])
+                cur["name"] = item["name"]
+            else:
+                cur["rating"] = item["rating"]
+                cur["location"] = item["geometry"]["location"]
+                cur["name"] = item["name"]
+
+
+            globalid.append(cur.copy())
+
+
+      except:
+           pass
+
+
+    return jsonify(globalid)
+
 
 
 #/update?location=_x,_y
@@ -101,17 +139,9 @@ def update():
 
 
 
-@app.route('/hello')
+
 def hello():
 
-
-
-
-
-
-
-
-        pprint(food)
 
         def mean_confidence_interval(data, confidence=0.95):
             a = 1.0*np.array(data)
@@ -124,13 +154,12 @@ def hello():
         date_remaining = 6 -  (datetime.datetime.today().weekday())
         today = date.today()
         last_monday = today + relativedelta(weekday=MO(-1))
-        print(last_monday)
+        #print(last_monday)
         this_week_spending =  food.loc[food["DATE"]>= str(last_monday)]
         budget_remaining = budget - this_week_spending["DEBIT"].sum()
-        budget_remaining = str(budget_remaining)
-        result = {"budget_remaining" :  budget_remaining}
-        queryresult = urllib.request(query(43.6576585,-79.3809904))
-        return jsonify(result)
+        next_mon = ((today + relativedelta(weekday=MO(1))) - today ).days
+        allowance = budget_remaining / next_mon
+        return lower, upper , allowance
 
 def query(lat,lon):
     radius = 200
