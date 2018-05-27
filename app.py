@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import scipy as sp
 import scipy.stats
-from flask import Flask
+from flask import  Flask, flash, redirect, render_template, request, session, abort, url_for
 from flask import request
 from flask_cors import CORS
 import os
@@ -51,6 +51,10 @@ food = grouped.get_group("food")
 # luxury_food = grouped.get_group("luxury-food")
 
 @app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/search')
 def parse():
     key="AIzaSyB8QIFggqzXTSoUU3qD0oN_6aXxe64ZewU"
     keywords = {
