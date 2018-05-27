@@ -4,3 +4,4 @@ pandas==0.20.3
 Flask==0.12.2
 scipy==0.19.1
 python_dateutil==2.7.3
+Flask-Cors==3.0.4

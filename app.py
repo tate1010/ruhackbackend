@@ -4,6 +4,7 @@ import scipy as sp
 import scipy.stats
 from flask import Flask
 from flask import request
+from flask_cors import CORS
 import os
 from pprint import pprint
 import datetime
@@ -20,6 +21,7 @@ import json
 #    return app
 
 app = Flask(__name__, instance_relative_config=True)
+CORS(app)
 #app.config.from_mapping(
 #    SECRET_KEY='dev',
 #    DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
