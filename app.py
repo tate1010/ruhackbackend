@@ -4,7 +4,6 @@ import scipy as sp
 import scipy.stats
 from flask import Flask
 import os
-from matplotlib import pyplot as plt
 from pprint import pprint
 import datetime
 from datetime import date, timedelta
