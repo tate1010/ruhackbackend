@@ -55,10 +55,9 @@ def parse(userID, query):
 
     #contents = urllib.request.urlopen(url).read()
 
-    contents = json.load( urllib.request.urlopen(url.replace(" ", "%20")))
-    nextpage = contents["next_page_token"]
+    contents = json.load(urllib.request.urlopen(url.replace(" ", "%20")))
 
-    return contents
+    return jsonify(contents)
 
 
 
